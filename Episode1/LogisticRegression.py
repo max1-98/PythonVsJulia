@@ -54,11 +54,11 @@ class LogisticRegression(LinearModel):
                 break
 
     def plotfit(self, x, y):
-        x1 = x[:,0]
-        x2 = x[:,1]
+        x1 = x[:,1]
+        x2 = x[:,2]
         plt.scatter(x1,x2,c=y)
         inp = np.linspace(x1.min(),x1.max(),100)
-        out = -self.theta[0]/self.theta[1]*inp
+        out = -(self.theta[1]*inp+self.theta[0])/self.theta[2]
         plt.plot(inp,out,"-r")
         plt.show()
 
@@ -82,13 +82,17 @@ def csv_to_matrix(filename):
 
   return matrix
 
-# Example usage: (only works for data with 2 input parameters)
+# Example usage:
 filename = 'file_name.csv'
 data_matrix = csv_to_matrix(filename)
+n = np.shape(data_matrix)[1]
+x = data_matrix[:,0:n-1]
+y = data_matrix[:,n-1]
 
-x = data_matrix[:,0:2]
-y = data_matrix[:,2]
+# Adding a column of 1s to the matrix x
+x = np.insert(x, 0, 1, axis=1) 
 
+###
 clf = LogisticRegression()
 
 # Manual benchmarking

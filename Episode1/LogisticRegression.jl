@@ -18,7 +18,7 @@ function sigm(x)
     return 1/(1+exp(-x))
 end
 
-function fitLOGREG(model::LinearModel, x,y)
+function fit(model::LinearModel, x,y)
 
     m,n=size(x)
     model.theta = zeros(n)
@@ -39,14 +39,13 @@ function fitLOGREG(model::LinearModel, x,y)
 end
 
 function plt(x,y)
-    scatter!(x[:, 1], x[:, 2], zcolor=y)
+    scatter!(x[:, 2], x[:, 3], zcolor=y)
 end
 
 function pltfit(model::LinearModel, x, y)
-    grad = -model.theta[1]/model.theta[2]
-    x1 = minimum(x[:,1])
-    x2 = maximum(x[:,1])
-    plot!([x1,x2], [grad*x1,grad*x2])
+    x1 = minimum(x[:,2])
+    x2 = maximum(x[:,2])
+    plot!([x1,x2], [-(x1*model.theta[2]+model.theta[1])/model.theta[3],-(x2*model.theta[2]+model.theta[1])/model.theta[3]])
 end
 
 scatter()
@@ -56,8 +55,8 @@ function csv_to_matrix(filename::String)
     # Read the CSV file into a DataFrame
     df = CSV.read(filename, DataFrame)
     n = size(df[1,:])[1]
-    # Extract the two columns as a matrix
-    x = Matrix(df[:, 1:n-1])
+
+    x = Matrix(hcat(ones(size(df, 1)), df[:, 1:end-1])) 
     y = Vector(df[:,n])
     return (x,y)
 end
