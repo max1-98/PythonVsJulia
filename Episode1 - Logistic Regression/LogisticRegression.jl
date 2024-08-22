@@ -48,6 +48,17 @@ function pltfit(model::LinearModel, x, y)
     plot!([x1,x2], [-(x1*model.theta[2]+model.theta[1])/model.theta[3],-(x2*model.theta[2]+model.theta[1])/model.theta[3]])
 end
 
+function predict(model::LinearModel, x)
+    x= vcat(1, x)
+    n = 1/(1+exp(-model.theta'*x))
+
+    if n > 0.5
+        return 1
+    else
+        return 0
+    end
+end
+
 scatter()
 model = LinearModel()
 
